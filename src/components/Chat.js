@@ -72,14 +72,11 @@ function Chat({ chatInfo }) {
 
   }
 
-  console.log("data del mensaje:", messageData)
 
   useEffect(() => {
     showMessage()
   }, [messageData])
 
-
-  console.log("chat del usuario:", location)
 
   return (
     <Box sx={styles.chat}>

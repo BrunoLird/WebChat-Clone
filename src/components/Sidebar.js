@@ -1,4 +1,4 @@
-import { Avatar, Input, List, ListItem, ListItemText, Paper, TextField } from "@mui/material"
+import { Avatar, Card, Input, List, ListItem, ListItemText, Paper, TextField } from "@mui/material"
 import { collection, getDocs } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { auth, database } from "../firebase/setup"
@@ -36,22 +36,23 @@ function Sidebar({onChatSelect}) {
         component={"img"}
         src={lens}
         alt="lens"
-        width={"25px"}
+        width={"23px"}
         ml={"25px"}
         mr={"10px"}
         />
-        <TextField id="outlined-basic" label="Search" variant="outlined" />
+        <TextField  size="small" fullWidth id="outlined-basic" label="Search" variant="outlined" />
       </Box>
       {users.filter(user => user.id !== auth.currentUser?.uid).map((user) => (
-        <Paper
+        <Card
           key={user.id}
           elevation={0}
           sx={{
-            border: "1px solid #D4D4D4",
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
             cursor: "pointer",
             "&:hover": {
               opacity: 0.8,
             },
+            marginBottom:0.5
           }}
           onClick={() => onChatSelect({
             id: user.id,
@@ -65,7 +66,7 @@ function Sidebar({onChatSelect}) {
               <ListItemText sx={{ marginLeft: "10px" }} primary={user.username} />
             </ListItem>
           </List>
-        </Paper>
+        </Card>
       ))}
     </Box>
   )
