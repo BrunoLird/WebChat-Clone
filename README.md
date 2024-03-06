@@ -1,3 +1,6 @@
+![image](https://github.com/BrunoLird/whatsapp/assets/122500964/9cd060b3-905c-4cba-8729-26292bc4c5e6)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
