@@ -2,8 +2,6 @@ import { Grid, Typography } from "@mui/material"
 import React, { useState } from "react"
 import Navbar from "./Navbar"
 import Sidebar from "./Sidebar"
-import smartphone from "../assets/images/smartphone.png"
-import colors from "../assets/theme/colors"
 import Box from "@mui/material/Box"
 import Chat from "./Chat"
 

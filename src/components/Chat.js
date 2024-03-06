@@ -21,18 +21,25 @@ function Chat({ chatInfo }) {
 
 
   const addMessage = async () => {
-    const userDoc = doc(database, "Users", `${auth.currentUser?.uid}`)
-    const messageDoc = doc(userDoc, "Message", `${auth.currentUser?.uid}`)
-    const messageRef = collection(messageDoc, `Message-${location.state.id}`)
-    try {
-      await addDoc(messageRef, {
-        message: message,
-        file: file,
-      })
-    } catch (err) {
-      console.error(err)
+    const userDoc = doc(database, "Users", `${auth.currentUser?.uid}`);
+    const messageDoc = doc(userDoc, "Message", `${auth.currentUser?.uid}`);
+
+    const messageId = chatInfo && chatInfo.id ? chatInfo.id : null;
+
+    if (messageId) {
+      const messageRef = collection(messageDoc, `Message-${messageId}`);
+      try {
+        await addDoc(messageRef, {
+          message: message,
+          file: file,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      console.error("No se puede acceder a chatInfo.id porque chatInfo o chatInfo.id son nulos.");
     }
-  }
+  };
 
 
   const sendMessage = async () => {
