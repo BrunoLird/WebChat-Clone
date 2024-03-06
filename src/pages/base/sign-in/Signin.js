@@ -54,7 +54,7 @@ export default function Signin() {
               height={"30px"}
               marginLeft={"125px"}
             />
-            <Typography fontSize={"18px"} fontWeight={"bold"} marginLeft={"20px"}>WHATSAPP WEB</Typography>
+            <Typography fontSize={"18px"} fontWeight={"bold"} marginLeft={"20px"}>WEBCHAT WEB</Typography>
           </Box>
           <Card
             sx={styles.cardStyle}>
