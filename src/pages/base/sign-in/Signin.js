@@ -3,8 +3,8 @@ import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
 import Toolbar from "@mui/material/Toolbar"
 import whatsapp from "../../../assets/images/whatsapp.png"
-import { Button, Card, CardContent, Typography } from "@mui/material"
-import google from "../../../assets/images/google.png"
+import { Button, Card, CardContent, Divider, Typography } from "@mui/material"
+import google from "../../../assets/images/google.webp"
 import { signInWithPopup } from "firebase/auth"
 import { auth, database, googleProvider } from "../../../firebase/setup"
 import { doc, setDoc } from "firebase/firestore"
@@ -58,26 +58,32 @@ export default function Signin() {
           </Box>
           <Card
             sx={styles.cardStyle}>
-            <CardContent sx={{ display: "flex" }}>
+            <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
               <Box>
-                <Typography sx={styles.loginText} fontWeight={"bold"}>Use Whatsapp on your computer</Typography>
-                <Typography sx={styles.loginText}>1. Open Whatsapp on your computer</Typography>
-                <Typography sx={styles.loginText}>2. Sign in using google account</Typography>
-                <Typography sx={styles.loginText}>3. Sign in using phone number</Typography>
+                <Typography sx={styles.loginText} fontWeight={"bold"}>Use WebChat on your devices</Typography>
+                <Typography sx={styles.loginText}>1. Open WebChat on your browser</Typography>
+                <Typography sx={styles.loginText}>2. Sign in using Google account</Typography>
+                <Typography sx={styles.loginText}>3. Sign in using Phone number</Typography>
+                <Box mt={7}>
+                  <Button variant={"contained"} sx={styles.buttonStyle} onClick={() => navigate(ROUTES.PHONE)}>
+                    Sign in with phone number
+                  </Button>
+                </Box>
               </Box>
+              <Divider orientation={"vertical"} flexItem/>
               <Box onClick={googleSignIn} className="signin-btn">
+                <Typography sx={styles.sigInText}>Sign in:</Typography>
                 <Box
                   component={"img"}
                   src={google}
                   alt="whatsapp"
                   width={"150px"}
                   height={"150px"}
+                  mt={3}
+                  sx={{ cursor: "pointer" }}
                 />
               </Box>
             </CardContent>
-            <Button variant={"contained"} sx={styles.buttonStyle} onClick={() => navigate(ROUTES.PHONE)}>
-              Sign in with phone number
-            </Button>
           </Card>
         </Toolbar>
       </AppBar>
@@ -93,15 +99,16 @@ const styles = {
     backgroundColor: colors.primary.main,
   },
   cardStyle: {
-    width: "70%",
+    width: "50%",
     height: "400px",
     position: "absolute",
     top: 0,
     left: 0,
     background: "white",
     marginTop: "100px",
-    marginLeft: "150px",
+    marginLeft: "25%",
     padding: "40px",
+
   },
   loginText: {
     fontSize: "20px",
@@ -109,5 +116,9 @@ const styles = {
   },
   buttonStyle: {
     backgroundColor: colors.primary.main,
+  },
+  sigInText: {
+    textAlign: "center",
+    color: colors.secondary.main,
   }
 }

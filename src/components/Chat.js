@@ -1,113 +1,182 @@
-import React, { useEffect, useReducer, useState } from 'react'
-import Navbar from './Navbar'
-import { useLocation } from 'react-router-dom'
-import "./Chat.css"
-import clip from "../assets/images/clip.png"
-import { addDoc, collection, doc, getDocs } from 'firebase/firestore'
-import { auth, database } from '../firebase/setup'
-import send from "../assets/images/send.png"
-import { List, ListItem, ListItemText, Paper } from '@mui/material'
+import React, { useEffect, useReducer, useState } from "react"
+import Navbar from "./Navbar"
+import { useLocation } from "react-router-dom"
+import { addDoc, collection, doc, getDocs } from "firebase/firestore"
+import { auth, database } from "../firebase/setup"
+import { IconButton, List, ListItem, ListItemText, Paper, Typography } from "@mui/material"
+import Box from "@mui/material/Box"
+import Add from "../assets/icons/add.png"
+import SendIcon from "@mui/icons-material/Send"
+import background from "../assets/images/design.jpg"
 
-function Chat() {
-  
+function Chat({ chatInfo }) {
+
   const fileRef = useReducer(null)
 
-  const [message,setMessage] = useState("")
-  const [messageData,setMessageData] = useState([])
-  const [file,setFile] = useState("")
+  const [message, setMessage] = useState("")
+  const [messageData, setMessageData] = useState([])
+  const [file, setFile] = useState("")
 
   const location = useLocation()
 
-  const addMessage = async()=>{
-    const userDoc = doc(database,"Users",`${auth.currentUser?.uid}`)
-    const messageDoc = doc(userDoc,"Message",`${auth.currentUser?.uid}`)
-    const messageRef = collection(messageDoc,`Message-${location.state.id}`)
-    try{
-      await addDoc(messageRef,{
-         message:message,
-         file:file
+
+  //Add message for the receiver user db
+  const addMessage = async () => {
+    const userDoc = doc(database, "Users", `${auth.currentUser?.uid}`)
+    const messageDoc = doc(userDoc, "Message", `${auth.currentUser?.uid}`)
+    const messageRef = collection(messageDoc, `Message-${location.state.id}`)
+    try {
+      await addDoc(messageRef, {
+        message: message,
+        file: file,
       })
-    }catch(err){
+    } catch (err) {
       console.error(err)
     }
   }
 
-  const sendMessage = async()=>{
-    const userDoc = doc(database,"Users",`${location.state.id}`)
-    const messageDoc = doc(userDoc,"Message",`${location.state.id}`)
-    const messageRef = collection(messageDoc,`Message-${auth.currentUser?.uid}`)
-    try{
-      await addDoc(messageRef,{
-         message:message,
-         file:file,
-         name:auth.currentUser?.displayName
-      })
-      addMessage()
-      setFile("")
-    }catch(err){
-      console.error(err)
-    }
-  }
 
-  const showMessage = async()=>{
-    const userDoc = doc(database,"Users",`${auth.currentUser?.uid}`)
-    const messageDoc = doc(userDoc,"Message",`${auth.currentUser?.uid}`)
-    const messageRef = collection(messageDoc,`Message-${location.state.id}`)
-    setTimeout(async()=>{
-      try{
+  //Send message for the login user
+  const sendMessage = async () => {
+    const userDoc = doc(database, "Users", `${chatInfo.id}`);
+    const messageDoc = doc(userDoc, "Message", `${chatInfo.id}`);
+    const messageRef = collection(messageDoc, `Message-${auth.currentUser?.uid}`);
+    try {
+      await addDoc(messageRef, {
+        message: message,
+        file: file,
+        name: auth.currentUser?.displayName,
+      });
+      addMessage();
+      setFile("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
+  const showMessage = async () => {
+    const userDoc = doc(database, "Users", `${auth.currentUser?.uid}`)
+    const messageDoc = doc(userDoc, "Message", `${auth.currentUser?.uid}`)
+    const messageRef = collection(messageDoc, `Message-${chatInfo.id}`)
+    setTimeout(async () => {
+      try {
         const data = await getDocs(messageRef)
-        const filteredData = data.docs.map((doc)=>({
+        const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
-          id:doc.id
+          id: doc.id,
         }))
         setMessageData(filteredData)
-       }catch(err){
-         console.error(err)
-       }
-    },1000)
-   
+      } catch (err) {
+        console.error(err)
+      }
+    }, 1000)
+
   }
 
+  console.log("data del mensaje:", messageData)
 
-  useEffect(()=>{
+  useEffect(() => {
     showMessage()
-  },[messageData])
+  }, [messageData])
 
 
   console.log("chat del usuario:", location)
 
   return (
-    <div className='chat'>
-      <div className='chat-top'>
-      <Navbar recieverUsername={location.state.username} 
-      recieverProImg = {location.state.profile_image}/>
-      </div>
-      <div className='chat-middle'>
-        {messageData.map((data)=>{
-          return <>
-          <h5 style={{fontWeight:"200"}}>{data.name}</h5>
-           <Paper sx={{marginTop:"10px",width:"max-content"}}>
-            <List>
-              <ListItem>
-                <ListItemText primary={data.message}/>
-                {data.file !== "" && <img style={{width:"200px"}} src={data.file}/>}
-              </ListItem>
-            </List>
-           </Paper>
-          </>
+    <Box sx={styles.chat}>
+
+      <Box sx={styles.chatTop}>
+        <Navbar
+          recieverUsername={chatInfo.username}
+          recieverProImg={chatInfo.profile_image}
+        />
+      </Box>
+      <Box sx={styles.chatMiddle}>
+        {messageData.map((data) => {
+          const isCurrentUser = data.name === auth.currentUser?.displayName
+
+          return (
+            <div key={data.id} style={{ textAlign: isCurrentUser ? "right" : "left" }}>
+              <Typography style={{ fontWeight: "200" }}>{data.name}</Typography>
+              <Paper sx={{ marginTop: "10px", width: "max-content" }}>
+                <List>
+                  <ListItem>
+                    <ListItemText primary={data.message} />
+                    {data.file !== "" && <img style={{ width: "200px" }} src={data.file} />}
+                  </ListItem>
+                </List>
+              </Paper>
+            </div>
+          )
         })}
-      </div>
-      <div className='chat-bottom'>
-        <img onClick={()=> fileRef.current.click()} className='chat-bottom-icon' src={clip}/>
-        <input accept='image/*' onChange={(e)=> setFile(URL.createObjectURL(e.target.files[0]))} ref={fileRef} type='file' className='file'/>
-        <input onChange={(e)=> setMessage(e.target.value)} className='chat-text' placeholder='Type a message'/>
+      </Box>
+      <Box sx={styles.chatBottom}>
+        {/*<img onClick={()=> fileRef.current.click()} className='chat-bottom-icon' src={clip}/>*/}
+        <Box
+          component={"img"}
+          src={Add}
+          width={"30px"}
+          height={"30px"}
+          bgcolor={"white"}
+          onClick={() => fileRef.current.click()}
+          borderRadius={"20%"}
+          p={1}
+          ml={1}
+          sx={{ cursor: "pointer" }}
+        />
+        <input accept="image/*" onChange={(e) => setFile(URL.createObjectURL(e.target.files[0]))} ref={fileRef}
+               type="file" style={{ display: "none" }} />
+        <input onChange={(e) => setMessage(e.target.value)} style={styles.chatText} placeholder="Type a message" />
         {file && <Paper>
-          <img style={{width:"70px",padding:"3px"}} src={file}/>
+          <img style={{ width: "70px", padding: "3px" }} src={file} />
         </Paper>}
-        <img onClick={sendMessage} src={send} className='send-icon'/>
-      </div>
-    </div>
+        {/*<img onClick={sendMessage} src={send} className='send-icon'/>*/}
+        <IconButton
+          onClick={sendMessage}
+        >
+          <SendIcon fontSize={"large"} color={"primary"} />
+        </IconButton>
+      </Box>
+    </Box>
   )
 }
 
 export default Chat
+
+const styles = {
+  chat: {
+    backgroundImage: ` url(${background})`,
+    width: "150%",
+    height: "100%",
+  },
+  chatTop: {
+    position: "fixed",
+    top: 0,
+    width: "100%",
+    zIndex: 2,
+  },
+  chatMiddle: {
+    paddingTop: "90px",
+    paddingLeft: "30px",
+    minHeight: "100vh",
+    height: "100%",
+  },
+  chatBottom: {
+    position: "fixed",
+    bottom: 0,
+    width: "67%",
+    backgroundColor: "#E9E9E9",
+    height: "70px",
+    display: "flex",
+    alignItems: "center",
+  },
+  chatText: {
+    width: "90%",
+    height: "40px",
+    marginLeft: "15px",
+    borderRadius: "10px",
+    border: `1px solid #E9E9E9`,
+  },
+
+}

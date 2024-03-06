@@ -11,10 +11,16 @@ import google from "../assets/images/google.png"
 import { IconButton, Typography } from "@mui/material"
 import { ROUTES } from "../services/constants"
 import LogoutIcon from '@mui/icons-material/Logout';
+import { styled } from '@mui/material/styles';
+
 
 export default function Navbar(props) {
 
   const navigate = useNavigate()
+
+  const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+    alignItems: 'center',
+  }));
 
   const logout = async () => {
     try {
@@ -31,7 +37,7 @@ export default function Navbar(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={styles.navBar}>
-        <Toolbar variant="dense">
+        <StyledToolbar >
           <Box
             component={"img"}
             src={props.recieverProImg ?? auth.currentUser?.photoURL}
@@ -44,7 +50,7 @@ export default function Navbar(props) {
           <IconButton aria-label="delete" size="large"  onClick={logout}>
             <LogoutIcon fontSize="inherit" />
           </IconButton>
-        </Toolbar>
+        </StyledToolbar>
       </AppBar>
     </Box>
   )
@@ -55,7 +61,7 @@ const styles = {
   navBar: {
     position: "static",
     elevation: 0,
-    height: "70px",
+    // height: "70px",
     backgroundColor: colors.primary.main,
   },
 }

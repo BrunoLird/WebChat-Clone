@@ -8,7 +8,7 @@ import Box from "@mui/material/Box"
 import colors from "../assets/theme/colors"
 import { InputRounded } from "@mui/icons-material"
 
-function Sidebar() {
+function Sidebar({onChatSelect}) {
 
   const [users, setUsers] = useState([])
 
@@ -32,8 +32,6 @@ function Sidebar() {
   }, [users])
 
 
-  // console.log("Los usuarios:", users)
-
   return (
     <Box>
       <Box sx={styles.search}>
@@ -47,21 +45,31 @@ function Sidebar() {
         />
         <TextField id="outlined-basic" label="Search" variant="outlined" />
       </Box>
-      {users.filter(user => user.id !== auth.currentUser?.uid).map((user) => {
-        return <>
-          <Link to="/chat"
-                state={{ id: user.id, username: user.username, profile_image: user.profile_image }}>
-            <Paper elevation={0} sx={{ border: "1px solid #D4D4D4" }}>
-              <List>
-                <ListItem>
-                  <Avatar sx={{ marginLeft: "10px" }} src={user.profile_image} />
-                  <ListItemText sx={{ marginLeft: "10px" }} primary={user.username} />
-                </ListItem>
-              </List>
-            </Paper>
-          </Link>
-        </>
-      })}
+      {users.filter(user => user.id !== auth.currentUser?.uid).map((user) => (
+        <Paper
+          key={user.id}
+          elevation={0}
+          sx={{
+            border: "1px solid #D4D4D4",
+            cursor: "pointer",
+            "&:hover": {
+              opacity: 0.8,
+            },
+          }}
+          onClick={() => onChatSelect({
+            id: user.id,
+            username: user.username,
+            profile_image: user.profile_image
+          })}
+        >
+          <List>
+            <ListItem>
+              <Avatar sx={{ marginLeft: "10px" }} src={user.profile_image} />
+              <ListItemText sx={{ marginLeft: "10px" }} primary={user.username} />
+            </ListItem>
+          </List>
+        </Paper>
+      ))}
     </Box>
   )
 }
