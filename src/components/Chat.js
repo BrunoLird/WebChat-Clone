@@ -20,7 +20,6 @@ function Chat({ chatInfo }) {
   const location = useLocation()
 
 
-  //Add message for the receiver user db
   const addMessage = async () => {
     const userDoc = doc(database, "Users", `${auth.currentUser?.uid}`)
     const messageDoc = doc(userDoc, "Message", `${auth.currentUser?.uid}`)
@@ -36,7 +35,6 @@ function Chat({ chatInfo }) {
   }
 
 
-  //Send message for the login user
   const sendMessage = async () => {
     const userDoc = doc(database, "Users", `${chatInfo.id}`);
     const messageDoc = doc(userDoc, "Message", `${chatInfo.id}`);
@@ -112,7 +110,6 @@ function Chat({ chatInfo }) {
         })}
       </Box>
       <Box sx={styles.chatBottom}>
-        {/*<img onClick={()=> fileRef.current.click()} className='chat-bottom-icon' src={clip}/>*/}
         <Box
           component={"img"}
           src={Add}
@@ -131,7 +128,6 @@ function Chat({ chatInfo }) {
         {file && <Paper>
           <img style={{ width: "70px", padding: "3px" }} src={file} />
         </Paper>}
-        {/*<img onClick={sendMessage} src={send} className='send-icon'/>*/}
         <IconButton
           onClick={sendMessage}
         >

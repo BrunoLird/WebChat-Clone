@@ -31,9 +31,6 @@ export default function Navbar(props) {
     }
   }
 
-  console.log(auth.currentUser)
-
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={styles.navBar}>
@@ -61,7 +58,6 @@ const styles = {
   navBar: {
     position: "static",
     elevation: 0,
-    // height: "70px",
     backgroundColor: colors.primary.main,
   },
 }

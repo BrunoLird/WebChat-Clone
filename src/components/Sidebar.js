@@ -3,15 +3,12 @@ import { collection, getDocs } from "firebase/firestore"
 import React, { useEffect, useState } from "react"
 import { auth, database } from "../firebase/setup"
 import lens from "../assets/images/lens.png"
-import { Link } from "react-router-dom"
 import Box from "@mui/material/Box"
-import colors from "../assets/theme/colors"
-import { InputRounded } from "@mui/icons-material"
+
 
 function Sidebar({onChatSelect}) {
 
   const [users, setUsers] = useState([])
-
 
   const getUser = async () => {
     const userRef = collection(database, "Users")

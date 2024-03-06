@@ -6,13 +6,11 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"
 import { auth } from "../firebase/setup"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "../services/constants"
-import colors from "../assets/theme/colors"
 import Box from "@mui/material/Box"
 
 function PhoneSignin() {
 
   const navigate = useNavigate()
-
   const [phone, setPhone] = useState("")
   const [user, setUser] = useState(null)
   const [otp, setOtp] = useState("")
@@ -26,7 +24,6 @@ function PhoneSignin() {
       console.error(err)
     }
   }
-
 
   const verifyOtp = async () => {
     try {
@@ -61,7 +58,6 @@ function PhoneSignin() {
 }
 
 export default PhoneSignin
-
 
 
 const styles = {
